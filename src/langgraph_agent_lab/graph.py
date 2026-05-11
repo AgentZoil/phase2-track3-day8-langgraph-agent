@@ -20,10 +20,12 @@ from .nodes import (
     retry_or_fallback_node,
     risky_action_node,
     tool_node,
+    tool_primary_node,
+    tool_secondary_node,
 )
 from .routing import (
     route_after_approval,
-    route_after_classify,
+    route_after_classify_parallel,
     route_after_evaluate,
     route_after_retry,
 )
@@ -52,6 +54,8 @@ def build_graph(checkpointer: Any | None = None) -> Any:  # noqa: ANN401
     graph.add_node("classify", classify_node)
     graph.add_node("answer", answer_node)
     graph.add_node("tool", tool_node)
+    graph.add_node("tool_primary", tool_primary_node)
+    graph.add_node("tool_secondary", tool_secondary_node)
     graph.add_node("evaluate", evaluate_node)
     graph.add_node("clarify", ask_clarification_node)
     graph.add_node("risky_action", risky_action_node)
@@ -62,7 +66,9 @@ def build_graph(checkpointer: Any | None = None) -> Any:  # noqa: ANN401
 
     graph.add_edge(START, "intake")
     graph.add_edge("intake", "classify")
-    graph.add_conditional_edges("classify", route_after_classify)
+    graph.add_conditional_edges("classify", route_after_classify_parallel)
+    graph.add_edge("tool_primary", "evaluate")
+    graph.add_edge("tool_secondary", "evaluate")
     graph.add_edge("tool", "evaluate")
     graph.add_conditional_edges("evaluate", route_after_evaluate)
     graph.add_edge("clarify", "finalize")

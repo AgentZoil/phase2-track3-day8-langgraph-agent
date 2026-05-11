@@ -66,6 +66,7 @@ def _make_structured_tool_output(
     status: str,
     detail: str,
     idempotency_key: str,
+    tool_variant: str | None,
 ) -> dict[str, object]:
     return {
         "scenario_id": scenario_id,
@@ -73,6 +74,7 @@ def _make_structured_tool_output(
         "status": status,
         "detail": detail,
         "idempotency_key": idempotency_key,
+        "tool_variant": tool_variant,
     }
 
 
@@ -154,17 +156,18 @@ def tool_node(state: AgentState) -> dict:
     should_retry = bool(state.get("should_retry"))
     route = state.get("route")
     scenario_id = str(state.get("scenario_id", "unknown"))
-    idempotency_key = f"{scenario_id}:{route}:{attempt}"
+    tool_variant = state.get("tool_variant") or "single"
+    idempotency_key = f"{scenario_id}:{route}:{tool_variant}:{attempt}"
     should_fail = (should_retry or route == Route.ERROR.value) and attempt < 1
     if should_fail:
         detail = f"transient failure attempt={attempt} scenario={scenario_id}"
         structured = _make_structured_tool_output(
-            scenario_id, attempt, "error", detail, idempotency_key
+            scenario_id, attempt, "error", detail, idempotency_key, tool_variant
         )
     else:
-        detail = f"mock-tool-result for scenario={scenario_id}"
+        detail = f"mock-tool-result for scenario={scenario_id} variant={tool_variant}"
         structured = _make_structured_tool_output(
-            scenario_id, attempt, "ok", detail, idempotency_key
+            scenario_id, attempt, "ok", detail, idempotency_key, tool_variant
         )
     return {
         "tool_outputs": [structured],
@@ -176,9 +179,20 @@ def tool_node(state: AgentState) -> dict:
                 f"tool executed attempt={attempt}",
                 status=structured["status"],
                 idempotency_key=idempotency_key,
+                tool_variant=tool_variant,
             )
         ],
     }
+
+
+def tool_primary_node(state: AgentState) -> dict:
+    """Parallel tool branch one."""
+    return tool_node({**state, "tool_variant": "primary"})
+
+
+def tool_secondary_node(state: AgentState) -> dict:
+    """Parallel tool branch two."""
+    return tool_node({**state, "tool_variant": "secondary"})
 
 
 def risky_action_node(state: AgentState) -> dict:
@@ -290,15 +304,23 @@ def answer_node(state: AgentState) -> dict:
     approval = state.get("approval") or {}
     tool_outputs = state.get("tool_outputs") or []
     if tool_outputs:
-        latest = tool_outputs[-1]
-        if latest.get("status") == "ok":
-            answer = latest.get("detail", "Tool completed successfully.")
+        ok_outputs = [item for item in tool_outputs if item.get("status") == "ok"]
+        if ok_outputs:
+            seen: set[str] = set()
+            details_list = []
+            for item in ok_outputs:
+                detail = str(item.get("detail", ""))
+                if detail and detail not in seen:
+                    seen.add(detail)
+                    details_list.append(detail)
+            details = "; ".join(details_list)
+            answer = details or "Tool completed successfully."
             if approval.get("approved") and state.get("proposed_action"):
                 answer = f"{answer} Approved action: {state['proposed_action']}"
         else:
             answer = state.get("final_answer") or "Tool output unavailable."
     elif state.get("pending_question"):
-        answer = state["pending_question"]
+        answer = str(state["pending_question"])
     else:
         answer = "This is a safe mock answer. Replace with your agent response."
     return {
@@ -313,7 +335,7 @@ def evaluate_node(state: AgentState) -> dict:
     """Evaluate tool results — the 'done?' check that enables retry loops."""
     tool_outputs = state.get("tool_outputs", [])
     latest = tool_outputs[-1] if tool_outputs else {}
-    if latest.get("status") == "error":
+    if any(item.get("status") == "error" for item in tool_outputs):
         return {
             "evaluation_result": "needs_retry",
             "events": [
@@ -325,10 +347,18 @@ def evaluate_node(state: AgentState) -> dict:
                     detail=latest.get("detail"),
                 )
             ],
-        }
+    }
     return {
         "evaluation_result": "success",
-        "events": [make_event("evaluate", "completed", "tool result satisfactory", status="ok")],
+        "events": [
+            make_event(
+                "evaluate",
+                "completed",
+                "tool result satisfactory",
+                status="ok",
+                outputs=len(tool_outputs),
+            )
+        ],
     }
 
 

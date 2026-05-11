@@ -59,6 +59,7 @@ class AgentState(TypedDict, total=False):
     pending_question: str | None
     proposed_action: str | None
     proposed_action_details: dict[str, Any] | None
+    tool_variant: str | None
     approval: dict[str, Any] | None
     approval_timed_out: bool
     evaluation_result: str | None
@@ -108,6 +109,7 @@ def initial_state(scenario: Scenario) -> AgentState:
         "pending_question": None,
         "proposed_action": None,
         "proposed_action_details": None,
+        "tool_variant": None,
         "approval": None,
         "approval_timed_out": False,
         "evaluation_result": None,

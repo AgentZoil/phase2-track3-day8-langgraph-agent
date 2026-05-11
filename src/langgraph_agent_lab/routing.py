@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from langgraph.types import Send
+
 from .state import AgentState, Route
 
 
@@ -16,6 +18,18 @@ def route_after_classify(state: AgentState) -> str:
         Route.ERROR.value: "retry",
     }
     return mapping.get(route, "answer")
+
+
+def route_after_classify_parallel(state: AgentState) -> str | list[Send]:
+    """Map classified route to either a direct node or parallel tool sends."""
+    route = state.get("route", Route.SIMPLE.value)
+    if route == Route.TOOL.value:
+        base_state = dict(state)
+        return [
+            Send("tool_primary", base_state),
+            Send("tool_secondary", base_state),
+        ]
+    return route_after_classify(state)
 
 
 def route_after_retry(state: AgentState) -> str:

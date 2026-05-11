@@ -1,74 +1,74 @@
 # Checklist
 
 ## Phase 0: Setup
-- [ ] Install deps with `make install`
-- [ ] Run `make test` once
-- [ ] Read `README.md`, `docs/LAB_GUIDE.md`, `docs/RUBRIC.md`
-- [ ] Inspect `data/sample/scenarios.jsonl`
+- [x] Install deps with `make install`
+- [x] Run `make test` once
+- [x] Read `README.md`, `docs/LAB_GUIDE.md`, `docs/RUBRIC.md`
+- [x] Inspect `data/sample/scenarios.jsonl`
 
 ## Phase 1: Core graph
-- [ ] Update `src/langgraph_agent_lab/state.py`
-- [ ] Keep lean serializable state
-- [ ] Use append-only reducers only for audit lists
-- [ ] Add `evaluation_result` for retry gate
-- [ ] Carry `requires_approval` and `should_retry` into initial state
-- [ ] Implement `src/langgraph_agent_lab/nodes.py`
-- [ ] `classify_node` uses keyword + word-boundary heuristics
-- [ ] Risky keywords win first
-- [ ] Tool keywords win second
-- [ ] Missing-info only for short vague queries
-- [ ] Error keywords catch failure/timeout/crash cases
-- [ ] `evaluate_node` sets `needs_retry` or `success`
-- [ ] `retry_or_fallback_node` increments attempt
-- [ ] `dead_letter_node` handles max retry exhaustion
-- [ ] `approval_node` defaults approved for CI
-- [ ] `answer_node` grounds output in tool results when present
-- [ ] Implement `src/langgraph_agent_lab/routing.py`
-- [ ] Classify routes map cleanly to next node
-- [ ] Evaluate routes map to retry or answer
-- [ ] Retry routes stop at `max_attempts`
-- [ ] Approval routes continue only when approved
-- [ ] Wire `src/langgraph_agent_lab/graph.py`
-- [ ] Every path ends at `finalize -> END`
-- [ ] Run `.venv/bin/pytest`
-- [ ] Run `make run-scenarios`
-- [ ] Confirm `outputs/metrics.json` hits `100%` success
+- [x] Update `src/langgraph_agent_lab/state.py`
+- [x] Keep lean serializable state
+- [x] Use append-only reducers only for audit lists
+- [x] Add `evaluation_result` for retry gate
+- [x] Carry `requires_approval` and `should_retry` into initial state
+- [x] Implement `src/langgraph_agent_lab/nodes.py`
+- [x] `classify_node` uses keyword + word-boundary heuristics
+- [x] Risky keywords win first
+- [x] Tool keywords win second
+- [x] Missing-info only for short vague queries
+- [x] Error keywords catch failure/timeout/crash cases
+- [x] `evaluate_node` sets `needs_retry` or `success`
+- [x] `retry_or_fallback_node` increments attempt
+- [x] `dead_letter_node` handles max retry exhaustion
+- [x] `approval_node` defaults approved for CI
+- [x] `answer_node` grounds output in tool results when present
+- [x] Implement `src/langgraph_agent_lab/routing.py`
+- [x] Classify routes map cleanly to next node
+- [x] Evaluate routes map to retry or answer
+- [x] Retry routes stop at `max_attempts`
+- [x] Approval routes continue only when approved
+- [x] Wire `src/langgraph_agent_lab/graph.py`
+- [x] Every path ends at `finalize -> END`
+- [x] Run `.venv/bin/pytest`
+- [x] Run `make run-scenarios`
+- [x] Confirm `outputs/metrics.json` hits `100%` success
 
 ## Phase 2: Persistence
-- [ ] Implement `src/langgraph_agent_lab/persistence.py`
-- [ ] Support `memory` checkpointer
-- [ ] Support `sqlite` checkpointer
-- [ ] Use `sqlite3.connect(..., check_same_thread=False)`
-- [ ] Enable WAL mode
-- [ ] Accept plain path and `sqlite:///...`
-- [ ] Keep `thread_id` unique per scenario
-- [ ] Prove state history survives restart with SQLite
-- [ ] Show memory loses history after restart
+- [x] Implement `src/langgraph_agent_lab/persistence.py`
+- [x] Support `memory` checkpointer
+- [x] Support `sqlite` checkpointer
+- [x] Use `sqlite3.connect(..., check_same_thread=False)`
+- [x] Enable WAL mode
+- [x] Accept plain path and `sqlite:///...`
+- [x] Keep `thread_id` unique per scenario
+- [x] Prove state history survives restart with SQLite
+- [x] Show memory loses history after restart
 
 ## Phase 3: Metrics and report
-- [ ] Run `make grade-local`
-- [ ] Verify metrics schema is valid
-- [ ] Check retry and interrupt counts
-- [ ] Fill `reports/lab_report.md`
-- [ ] Describe architecture and state schema
-- [ ] Paste scenario table from metrics
-- [ ] Explain one failure mode and one retry path
-- [ ] Add persistence / recovery evidence
-- [ ] Add improvement plan
+- [x] Run `make grade-local`
+- [x] Verify metrics schema is valid
+- [x] Check retry and interrupt counts
+- [x] Fill `reports/lab_report.md`
+- [x] Describe architecture and state schema
+- [x] Paste scenario table from metrics
+- [x] Explain one failure mode and one retry path
+- [x] Add persistence / recovery evidence
+- [x] Add improvement plan
 
 ## Phase 4: Bonus points
-- [ ] Pick at least one bonus extension
-- [ ] Add real HITL with interrupt/resume
-- [ ] Add time travel with `get_state_history()`
-- [ ] Add parallel fan-out with `Send()`
-- [ ] Add graph diagram export
-- [ ] Add bonus evidence to report
+- [x] Pick at least one bonus extension
+- [x] Add real HITL with interrupt/resume
+- [x] Add time travel with `get_state_history()`
+- [x] Add parallel fan-out with `Send()`
+- [x] Add graph diagram export
+- [x] Add bonus evidence to report
 
 ## Final checks
-- [ ] `make test` passes
-- [ ] `make lint` passes
-- [ ] `make typecheck` passes
-- [ ] `make grade-local` passes
-- [ ] `outputs/metrics.json` valid
-- [ ] `reports/lab_report.md` complete
-- [ ] Can explain one route, one retry, one persistence demo
+- [x] `make test` passes
+- [x] `make lint` passes
+- [x] `make typecheck` passes
+- [x] `make grade-local` passes
+- [x] `outputs/metrics.json` valid
+- [x] `reports/lab_report.md` complete
+- [x] Can explain one route, one retry, one persistence demo
