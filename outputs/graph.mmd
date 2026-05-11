@@ -9,6 +9,8 @@ graph TD;
 	classify(classify)
 	answer(answer)
 	tool(tool)
+	tool_primary(tool_primary)
+	tool_secondary(tool_secondary)
 	evaluate(evaluate)
 	clarify(clarify)
 	risky_action(risky_action)
@@ -19,7 +21,27 @@ graph TD;
 	__end__(<p>__end__</p>)
 	__start__ --> intake;
 	intake --> classify;
-	classify --> __end__;
+	classify --> answer;
+	classify --> tool;
+	classify --> tool_primary;
+	classify --> tool_secondary;
+	classify --> clarify;
+	classify --> risky_action;
+	classify --> retry;
+	tool_primary --> evaluate;
+	tool_secondary --> evaluate;
+	tool --> evaluate;
+	evaluate --> answer;
+	evaluate --> retry;
+	clarify --> finalize;
+	risky_action --> approval;
+	approval --> tool;
+	approval --> clarify;
+	retry --> tool;
+	retry --> dead_letter;
+	answer --> finalize;
+	dead_letter --> finalize;
+	finalize --> __end__;
 	classDef default fill:#f2f0ff,line-height:1.2
 	classDef first fill-opacity:0
 	classDef last fill:#bfb6fc

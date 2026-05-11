@@ -59,6 +59,7 @@
 ## Phase 4: Bonus points
 - [x] Pick at least one bonus extension
 - [x] Add real HITL with interrupt/resume
+- [x] Add crash recovery demo with SQLite restart
 - [x] Add time travel with `get_state_history()`
 - [x] Add parallel fan-out with `Send()`
 - [x] Add graph diagram export
@@ -72,3 +73,4 @@
 - [x] `outputs/metrics.json` valid
 - [x] `reports/lab_report.md` complete
 - [x] Can explain one route, one retry, one persistence demo
+- [x] Can explain crash recovery from a persisted checkpoint

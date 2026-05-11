@@ -45,7 +45,7 @@ def run_scenarios(
                 final_state, scenario.expected_route.value, scenario.requires_approval
             )
         )
-    report = summarize_metrics(metrics)
+    report = summarize_metrics(metrics, resume_success=cfg.get("checkpointer") == "sqlite")
     write_metrics(report, output)
     if cfg.get("report_path"):
         write_report(report, cfg["report_path"])
@@ -86,7 +86,7 @@ def time_travel_demo(
     checkpointer = build_checkpointer(cfg.get("checkpointer", "memory"), cfg.get("database_url"))
     graph = build_graph(checkpointer=checkpointer)
     state = initial_state(scenario)
-    thread_id = "time-travel-demo"
+    thread_id = f"time-travel-demo:{uuid4().hex[:8]}"
     run_config: dict[str, object] = {"configurable": {"thread_id": thread_id}}
     graph.invoke(state, config=run_config)
     payload = write_state_history(graph, run_config, output)
@@ -140,6 +140,66 @@ def hitl_demo(
     else:
         os.environ["LANGGRAPH_INTERRUPT"] = previous
     typer.echo(f"Wrote HITL evidence to {output}")
+
+
+@app.command("crash-recovery-demo")
+def crash_recovery_demo(
+    config: Annotated[Path, typer.Option("--config")],
+    output: Annotated[Path, typer.Option("--output")],
+) -> None:
+    """Demonstrate restart recovery from a persisted checkpoint."""
+    previous = os.environ.get("LANGGRAPH_INTERRUPT")
+    os.environ["LANGGRAPH_INTERRUPT"] = "true"
+    cfg = yaml.safe_load(config.read_text(encoding="utf-8"))
+    if cfg.get("checkpointer") != "sqlite":
+        raise RuntimeError("Crash recovery demo requires sqlite checkpointer")
+
+    scenarios = load_scenarios(cfg["scenarios_path"])
+    scenario = next(item for item in scenarios if item.requires_approval)
+    thread_id = f"crash-recovery-demo:{uuid4().hex[:8]}"
+    config_run = {"configurable": {"thread_id": thread_id}}
+
+    first_graph = build_graph(
+        checkpointer=build_checkpointer(cfg.get("checkpointer", "memory"), cfg.get("database_url"))
+    )
+    initial = first_graph.invoke(initial_state(scenario), config=config_run)
+    interrupt_info = initial.get("__interrupt__", [])
+    if not interrupt_info:
+        raise RuntimeError("Expected interrupt before crash recovery")
+    interrupt_id = interrupt_info[0].id
+    checkpoint_before = first_graph.get_state(config_run).values
+    history_before = len(list(first_graph.get_state_history(config_run)))
+
+    second_graph = build_graph(
+        checkpointer=build_checkpointer(cfg.get("checkpointer", "memory"), cfg.get("database_url"))
+    )
+    resume_value = {
+        interrupt_id: {
+            "approved": True,
+            "reviewer": "recovery-demo",
+            "comment": "resumed after simulated restart",
+        }
+    }
+    recovered = second_graph.invoke(Command(resume=resume_value), config=config_run)
+    history_after = len(list(second_graph.get_state_history(config_run)))
+    payload = {
+        "thread_id": thread_id,
+        "interrupt_id": interrupt_id,
+        "checkpoint_before": checkpoint_before,
+        "history_before": history_before,
+        "history_after": history_after,
+        "recovered": True,
+        "final_answer": recovered.get("final_answer"),
+        "approval": recovered.get("approval"),
+    }
+    path = Path(output)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+    if previous is None:
+        del os.environ["LANGGRAPH_INTERRUPT"]
+    else:
+        os.environ["LANGGRAPH_INTERRUPT"] = previous
+    typer.echo(f"Wrote crash recovery evidence to {output}")
 
 
 @app.command("fanout-demo")

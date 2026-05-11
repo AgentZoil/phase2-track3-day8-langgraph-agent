@@ -1,0 +1,161 @@
+{
+  "thread_id": "time-travel-demo:fd10bfcd",
+  "history_len": 6,
+  "latest_route": "simple",
+  "rewind_route": "simple",
+  "latest_snapshot": {
+    "thread_id": "thread-S01_simple",
+    "scenario_id": "S01_simple",
+    "query": "How do I reset my password?",
+    "normalized_query": "How do I reset my password?",
+    "requires_approval": false,
+    "should_retry": false,
+    "route": "simple",
+    "risk_level": "low",
+    "attempt": 0,
+    "max_attempts": 3,
+    "retry_backoff_ms": 0,
+    "final_answer": "This is a safe mock answer. Replace with your agent response.",
+    "pending_question": null,
+    "proposed_action": null,
+    "proposed_action_details": null,
+    "tool_variant": null,
+    "approval": null,
+    "approval_timed_out": false,
+    "evaluation_result": null,
+    "dead_letter_reason": null,
+    "dead_letter_ticket": null,
+    "extracted_metadata": {
+      "char_count": 27,
+      "word_count": 6,
+      "token_count": 6,
+      "contains_digits": false,
+      "contains_pii": false,
+      "pii_types": []
+    },
+    "pii_findings": [],
+    "messages": [
+      "intake:How do I reset my password?"
+    ],
+    "tool_outputs": [],
+    "tool_results": [],
+    "errors": [],
+    "events": [
+      {
+        "node": "intake",
+        "event_type": "completed",
+        "message": "query normalized",
+        "latency_ms": 0,
+        "metadata": {
+          "pii_detected": false,
+          "pii_types": [],
+          "metadata": {
+            "char_count": 27,
+            "word_count": 6,
+            "token_count": 6,
+            "contains_digits": false,
+            "contains_pii": false,
+            "pii_types": []
+          }
+        }
+      },
+      {
+        "node": "classify",
+        "event_type": "completed",
+        "message": "route=simple",
+        "latency_ms": 0,
+        "metadata": {}
+      },
+      {
+        "node": "answer",
+        "event_type": "completed",
+        "message": "answer generated",
+        "latency_ms": 0,
+        "metadata": {
+          "used_tool": false
+        }
+      },
+      {
+        "node": "finalize",
+        "event_type": "completed",
+        "message": "workflow finished",
+        "latency_ms": 0,
+        "metadata": {}
+      }
+    ]
+  },
+  "rewind_snapshot": {
+    "thread_id": "thread-S01_simple",
+    "scenario_id": "S01_simple",
+    "query": "How do I reset my password?",
+    "normalized_query": "How do I reset my password?",
+    "requires_approval": false,
+    "should_retry": false,
+    "route": "simple",
+    "risk_level": "low",
+    "attempt": 0,
+    "max_attempts": 3,
+    "retry_backoff_ms": 0,
+    "final_answer": "This is a safe mock answer. Replace with your agent response.",
+    "pending_question": null,
+    "proposed_action": null,
+    "proposed_action_details": null,
+    "tool_variant": null,
+    "approval": null,
+    "approval_timed_out": false,
+    "evaluation_result": null,
+    "dead_letter_reason": null,
+    "dead_letter_ticket": null,
+    "extracted_metadata": {
+      "char_count": 27,
+      "word_count": 6,
+      "token_count": 6,
+      "contains_digits": false,
+      "contains_pii": false,
+      "pii_types": []
+    },
+    "pii_findings": [],
+    "messages": [
+      "intake:How do I reset my password?"
+    ],
+    "tool_outputs": [],
+    "tool_results": [],
+    "errors": [],
+    "events": [
+      {
+        "node": "intake",
+        "event_type": "completed",
+        "message": "query normalized",
+        "latency_ms": 0,
+        "metadata": {
+          "pii_detected": false,
+          "pii_types": [],
+          "metadata": {
+            "char_count": 27,
+            "word_count": 6,
+            "token_count": 6,
+            "contains_digits": false,
+            "contains_pii": false,
+            "pii_types": []
+          }
+        }
+      },
+      {
+        "node": "classify",
+        "event_type": "completed",
+        "message": "route=simple",
+        "latency_ms": 0,
+        "metadata": {}
+      },
+      {
+        "node": "answer",
+        "event_type": "completed",
+        "message": "answer generated",
+        "latency_ms": 0,
+        "metadata": {
+          "used_tool": false
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "thread_id": "hitl-demo:6f254a9d",
+  "interrupt_id": "6fe6f3f9d162431c63a3ea8fccb2086d",
+  "approved": true,
+  "final_answer": "mock-tool-result for scenario=S04_risky variant=single Approved action: Review external action for: Refund this customer and send confirmation email",
+  "approval": {
+    "approved": true,
+    "reviewer": "demo-reviewer",
+    "comment": "approved in demo"
+  }
+}

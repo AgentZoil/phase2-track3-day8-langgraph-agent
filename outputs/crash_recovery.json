@@ -1,0 +1,95 @@
+{
+  "thread_id": "crash-recovery-demo:c6df038f",
+  "interrupt_id": "9b552161d21a532302e6aeb393792269",
+  "checkpoint_before": {
+    "thread_id": "thread-S04_risky",
+    "scenario_id": "S04_risky",
+    "query": "Refund this customer and send confirmation email",
+    "normalized_query": "Refund this customer and send confirmation email",
+    "requires_approval": true,
+    "should_retry": false,
+    "route": "risky",
+    "risk_level": "high",
+    "attempt": 0,
+    "max_attempts": 3,
+    "retry_backoff_ms": 0,
+    "final_answer": null,
+    "pending_question": null,
+    "proposed_action": "Review external action for: Refund this customer and send confirmation email",
+    "proposed_action_details": {
+      "action": "external_side_effect",
+      "risk_level": "high",
+      "evidence": "Refund this customer and send confirmation email",
+      "justification": "High-risk request needs human approval before any side effect"
+    },
+    "tool_variant": null,
+    "approval": null,
+    "approval_timed_out": false,
+    "evaluation_result": null,
+    "dead_letter_reason": null,
+    "dead_letter_ticket": null,
+    "extracted_metadata": {
+      "char_count": 48,
+      "word_count": 7,
+      "token_count": 7,
+      "contains_digits": false,
+      "contains_pii": false,
+      "pii_types": []
+    },
+    "pii_findings": [],
+    "messages": [
+      "intake:Refund this customer and send confirmati"
+    ],
+    "tool_outputs": [],
+    "tool_results": [],
+    "errors": [],
+    "events": [
+      {
+        "node": "intake",
+        "event_type": "completed",
+        "message": "query normalized",
+        "latency_ms": 0,
+        "metadata": {
+          "pii_detected": false,
+          "pii_types": [],
+          "metadata": {
+            "char_count": 48,
+            "word_count": 7,
+            "token_count": 7,
+            "contains_digits": false,
+            "contains_pii": false,
+            "pii_types": []
+          }
+        }
+      },
+      {
+        "node": "classify",
+        "event_type": "completed",
+        "message": "route=risky",
+        "latency_ms": 0,
+        "metadata": {}
+      },
+      {
+        "node": "risky_action",
+        "event_type": "pending_approval",
+        "message": "approval required",
+        "latency_ms": 0,
+        "metadata": {
+          "action": "external_side_effect",
+          "risk_level": "high",
+          "evidence": "Refund this customer and send confirmation email",
+          "justification": "High-risk request needs human approval before any side effect"
+        }
+      }
+    ]
+  },
+  "history_before": 5,
+  "history_after": 10,
+  "recovered": true,
+  "final_answer": "mock-tool-result for scenario=S04_risky variant=single Approved action: Review external action for: Refund this customer and send confirmation email",
+  "approval": {
+    "approved": true,
+    "reviewer": "recovery-demo",
+    "comment": "resumed after simulated restart"
+  }
+}
