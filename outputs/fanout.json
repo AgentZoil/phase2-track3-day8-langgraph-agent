@@ -1,27 +1,27 @@
 {
-  "thread_id": "fanout-demo:97f830af",
+  "thread_id": "fanout-demo:3ef3c49b",
   "route": "tool",
   "tool_outputs": [
     {
-      "scenario_id": "S02_tool",
+      "scenario_id": "G03_tool",
       "attempt": 0,
       "status": "ok",
-      "detail": "mock-tool-result for scenario=S02_tool variant=primary",
-      "idempotency_key": "S02_tool:tool:primary:0",
+      "detail": "mock-tool-result for scenario=G03_tool variant=primary",
+      "idempotency_key": "G03_tool:tool:primary:0",
       "tool_variant": "primary"
     },
     {
-      "scenario_id": "S02_tool",
+      "scenario_id": "G03_tool",
       "attempt": 0,
       "status": "ok",
-      "detail": "mock-tool-result for scenario=S02_tool variant=secondary",
-      "idempotency_key": "S02_tool:tool:secondary:0",
+      "detail": "mock-tool-result for scenario=G03_tool variant=secondary",
+      "idempotency_key": "G03_tool:tool:secondary:0",
       "tool_variant": "secondary"
     }
   ],
   "tool_results": [
-    "{\"scenario_id\": \"S02_tool\", \"attempt\": 0, \"status\": \"ok\", \"detail\": \"mock-tool-result for scenario=S02_tool variant=primary\", \"idempotency_key\": \"S02_tool:tool:primary:0\", \"tool_variant\": \"primary\"}",
-    "{\"scenario_id\": \"S02_tool\", \"attempt\": 0, \"status\": \"ok\", \"detail\": \"mock-tool-result for scenario=S02_tool variant=secondary\", \"idempotency_key\": \"S02_tool:tool:secondary:0\", \"tool_variant\": \"secondary\"}"
+    "{\"scenario_id\": \"G03_tool\", \"attempt\": 0, \"status\": \"ok\", \"detail\": \"mock-tool-result for scenario=G03_tool variant=primary\", \"idempotency_key\": \"G03_tool:tool:primary:0\", \"tool_variant\": \"primary\"}",
+    "{\"scenario_id\": \"G03_tool\", \"attempt\": 0, \"status\": \"ok\", \"detail\": \"mock-tool-result for scenario=G03_tool variant=secondary\", \"idempotency_key\": \"G03_tool:tool:secondary:0\", \"tool_variant\": \"secondary\"}"
   ],
-  "final_answer": "mock-tool-result for scenario=S02_tool variant=primary; mock-tool-result for scenario=S02_tool variant=secondary"
+  "final_answer": "mock-tool-result for scenario=G03_tool variant=primary; mock-tool-result for scenario=G03_tool variant=secondary"
 }

@@ -1,11 +1,11 @@
 {
-  "thread_id": "crash-recovery-demo:c6df038f",
-  "interrupt_id": "9b552161d21a532302e6aeb393792269",
+  "thread_id": "crash-recovery-demo:054e9b6a",
+  "interrupt_id": "228eeb51776cef748225a4f3b878f234",
   "checkpoint_before": {
-    "thread_id": "thread-S04_risky",
-    "scenario_id": "S04_risky",
-    "query": "Refund this customer and send confirmation email",
-    "normalized_query": "Refund this customer and send confirmation email",
+    "thread_id": "thread-G08_risky",
+    "scenario_id": "G08_risky",
+    "query": "Cancel all pending orders for this customer",
+    "normalized_query": "Cancel all pending orders for this customer",
     "requires_approval": true,
     "should_retry": false,
     "route": "risky",
@@ -15,11 +15,11 @@
     "retry_backoff_ms": 0,
     "final_answer": null,
     "pending_question": null,
-    "proposed_action": "Review external action for: Refund this customer and send confirmation email",
+    "proposed_action": "Review external action for: Cancel all pending orders for this customer",
     "proposed_action_details": {
       "action": "external_side_effect",
       "risk_level": "high",
-      "evidence": "Refund this customer and send confirmation email",
+      "evidence": "Cancel all pending orders for this customer",
       "justification": "High-risk request needs human approval before any side effect"
     },
     "tool_variant": null,
@@ -29,7 +29,7 @@
     "dead_letter_reason": null,
     "dead_letter_ticket": null,
     "extracted_metadata": {
-      "char_count": 48,
+      "char_count": 43,
       "word_count": 7,
       "token_count": 7,
       "contains_digits": false,
@@ -38,7 +38,7 @@
     },
     "pii_findings": [],
     "messages": [
-      "intake:Refund this customer and send confirmati"
+      "intake:Cancel all pending orders for this custo"
     ],
     "tool_outputs": [],
     "tool_results": [],
@@ -53,7 +53,7 @@
           "pii_detected": false,
           "pii_types": [],
           "metadata": {
-            "char_count": 48,
+            "char_count": 43,
             "word_count": 7,
             "token_count": 7,
             "contains_digits": false,
@@ -77,7 +77,7 @@
         "metadata": {
           "action": "external_side_effect",
           "risk_level": "high",
-          "evidence": "Refund this customer and send confirmation email",
+          "evidence": "Cancel all pending orders for this customer",
           "justification": "High-risk request needs human approval before any side effect"
         }
       }
@@ -86,7 +86,7 @@
   "history_before": 5,
   "history_after": 10,
   "recovered": true,
-  "final_answer": "mock-tool-result for scenario=S04_risky variant=single Approved action: Review external action for: Refund this customer and send confirmation email",
+  "final_answer": "mock-tool-result for scenario=G08_risky variant=single Approved action: Review external action for: Cancel all pending orders for this customer",
   "approval": {
     "approved": true,
     "reviewer": "recovery-demo",

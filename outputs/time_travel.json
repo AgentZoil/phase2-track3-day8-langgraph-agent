@@ -1,13 +1,13 @@
 {
-  "thread_id": "time-travel-demo:fd10bfcd",
+  "thread_id": "time-travel-demo:416ecac0",
   "history_len": 6,
   "latest_route": "simple",
   "rewind_route": "simple",
   "latest_snapshot": {
-    "thread_id": "thread-S01_simple",
-    "scenario_id": "S01_simple",
-    "query": "How do I reset my password?",
-    "normalized_query": "How do I reset my password?",
+    "thread_id": "thread-G01_simple",
+    "scenario_id": "G01_simple",
+    "query": "What are your business hours?",
+    "normalized_query": "What are your business hours?",
     "requires_approval": false,
     "should_retry": false,
     "route": "simple",
@@ -26,16 +26,16 @@
     "dead_letter_reason": null,
     "dead_letter_ticket": null,
     "extracted_metadata": {
-      "char_count": 27,
-      "word_count": 6,
-      "token_count": 6,
+      "char_count": 29,
+      "word_count": 5,
+      "token_count": 5,
       "contains_digits": false,
       "contains_pii": false,
       "pii_types": []
     },
     "pii_findings": [],
     "messages": [
-      "intake:How do I reset my password?"
+      "intake:What are your business hours?"
     ],
     "tool_outputs": [],
     "tool_results": [],
@@ -50,9 +50,9 @@
           "pii_detected": false,
           "pii_types": [],
           "metadata": {
-            "char_count": 27,
-            "word_count": 6,
-            "token_count": 6,
+            "char_count": 29,
+            "word_count": 5,
+            "token_count": 5,
             "contains_digits": false,
             "contains_pii": false,
             "pii_types": []
@@ -85,10 +85,10 @@
     ]
   },
   "rewind_snapshot": {
-    "thread_id": "thread-S01_simple",
-    "scenario_id": "S01_simple",
-    "query": "How do I reset my password?",
-    "normalized_query": "How do I reset my password?",
+    "thread_id": "thread-G01_simple",
+    "scenario_id": "G01_simple",
+    "query": "What are your business hours?",
+    "normalized_query": "What are your business hours?",
     "requires_approval": false,
     "should_retry": false,
     "route": "simple",
@@ -107,16 +107,16 @@
     "dead_letter_reason": null,
     "dead_letter_ticket": null,
     "extracted_metadata": {
-      "char_count": 27,
-      "word_count": 6,
-      "token_count": 6,
+      "char_count": 29,
+      "word_count": 5,
+      "token_count": 5,
       "contains_digits": false,
       "contains_pii": false,
       "pii_types": []
     },
     "pii_findings": [],
     "messages": [
-      "intake:How do I reset my password?"
+      "intake:What are your business hours?"
     ],
     "tool_outputs": [],
     "tool_results": [],
@@ -131,9 +131,9 @@
           "pii_detected": false,
           "pii_types": [],
           "metadata": {
-            "char_count": 27,
-            "word_count": 6,
-            "token_count": 6,
+            "char_count": 29,
+            "word_count": 5,
+            "token_count": 5,
             "contains_digits": false,
             "contains_pii": false,
             "pii_types": []

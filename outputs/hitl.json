@@ -1,8 +1,8 @@
 {
-  "thread_id": "hitl-demo:6f254a9d",
-  "interrupt_id": "6fe6f3f9d162431c63a3ea8fccb2086d",
+  "thread_id": "hitl-demo:f155dfee",
+  "interrupt_id": "f6b8ca624bcdfd2b27ba75454edec17a",
   "approved": true,
-  "final_answer": "mock-tool-result for scenario=S04_risky variant=single Approved action: Review external action for: Refund this customer and send confirmation email",
+  "final_answer": "mock-tool-result for scenario=G08_risky variant=single Approved action: Review external action for: Cancel all pending orders for this customer",
   "approval": {
     "approved": true,
     "reviewer": "demo-reviewer",
