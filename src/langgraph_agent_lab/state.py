@@ -6,9 +6,9 @@ Students should extend the schema only when needed. Keep state lean and serializ
 from __future__ import annotations
 
 from enum import StrEnum
+from operator import add
 from typing import Annotated, Any, TypedDict
 
-from operator import add
 from pydantic import BaseModel, Field, field_validator
 
 
@@ -41,25 +41,33 @@ class ApprovalDecision(BaseModel):
 class AgentState(TypedDict, total=False):
     """LangGraph state.
 
-    TODO(student): decide which fields should be append-only and which should be overwritten.
-    The current annotations give a safe starting point for auditability.
+    Append-only audit lists use reducers. Scalar fields are overwritten on update.
     """
 
     thread_id: str
     scenario_id: str
     query: str
+    normalized_query: str
     requires_approval: bool
     should_retry: bool
     route: str
     risk_level: str
     attempt: int
     max_attempts: int
+    retry_backoff_ms: int
     final_answer: str | None
     pending_question: str | None
     proposed_action: str | None
+    proposed_action_details: dict[str, Any] | None
     approval: dict[str, Any] | None
+    approval_timed_out: bool
     evaluation_result: str | None
+    dead_letter_reason: str | None
+    dead_letter_ticket: dict[str, Any] | None
+    extracted_metadata: dict[str, Any]
+    pii_findings: Annotated[list[str], add]
     messages: Annotated[list[str], add]
+    tool_outputs: Annotated[list[dict[str, Any]], add]
     tool_results: Annotated[list[str], add]
     errors: Annotated[list[str], add]
     events: Annotated[list[dict[str, Any]], add]
@@ -88,24 +96,35 @@ def initial_state(scenario: Scenario) -> AgentState:
         "thread_id": f"thread-{scenario.id}",
         "scenario_id": scenario.id,
         "query": scenario.query,
+        "normalized_query": "",
         "requires_approval": scenario.requires_approval,
         "should_retry": scenario.should_retry,
         "route": "",
         "risk_level": "unknown",
         "attempt": 0,
         "max_attempts": scenario.max_attempts,
+        "retry_backoff_ms": 0,
         "final_answer": None,
         "pending_question": None,
         "proposed_action": None,
+        "proposed_action_details": None,
         "approval": None,
+        "approval_timed_out": False,
         "evaluation_result": None,
+        "dead_letter_reason": None,
+        "dead_letter_ticket": None,
+        "extracted_metadata": {},
+        "pii_findings": [],
         "messages": [],
+        "tool_outputs": [],
         "tool_results": [],
         "errors": [],
         "events": [],
     }
 
 
-def make_event(node: str, event_type: str, message: str, **metadata: Any) -> dict[str, Any]:
+def make_event(node: str, event_type: str, message: str, **metadata: object) -> dict[str, Any]:
     """Create a normalized event payload."""
-    return LabEvent(node=node, event_type=event_type, message=message, metadata=metadata).model_dump()
+    return LabEvent(
+        node=node, event_type=event_type, message=message, metadata=metadata
+    ).model_dump()

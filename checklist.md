@@ -1,59 +1,74 @@
 # Checklist
 
 ## Phase 0: Setup
-- [ ] Install dependencies with `make install`
-- [ ] Run `make test` once to confirm baseline
-- [ ] Review `data/sample/scenarios.jsonl` and routing rules in README
+- [ ] Install deps with `make install`
+- [ ] Run `make test` once
+- [ ] Read `README.md`, `docs/LAB_GUIDE.md`, `docs/RUBRIC.md`
+- [ ] Inspect `data/sample/scenarios.jsonl`
 
 ## Phase 1: Core graph
 - [ ] Update `src/langgraph_agent_lab/state.py`
-- [ ] Add typed state fields and reducers
-- [ ] Add `evaluation_result` for retry control
-- [ ] Implement node logic in `src/langgraph_agent_lab/nodes.py`
-- [ ] Build `classify_node` with keyword-based routing
-- [ ] Build `evaluate_node` to detect tool success or retry need
-- [ ] Build `dead_letter_node` for exhausted failures
-- [ ] Build `approval_node` with default approved state
-- [ ] Implement routing in `src/langgraph_agent_lab/routing.py`
-- [ ] Map classify output to next node
-- [ ] Map evaluate output to retry or answer
-- [ ] Stop retry loop at `max_attempts`
-- [ ] Wire graph in `src/langgraph_agent_lab/graph.py`
-- [ ] Ensure every route ends at `finalize -> END`
-- [ ] Run `make test`
+- [ ] Keep lean serializable state
+- [ ] Use append-only reducers only for audit lists
+- [ ] Add `evaluation_result` for retry gate
+- [ ] Carry `requires_approval` and `should_retry` into initial state
+- [ ] Implement `src/langgraph_agent_lab/nodes.py`
+- [ ] `classify_node` uses keyword + word-boundary heuristics
+- [ ] Risky keywords win first
+- [ ] Tool keywords win second
+- [ ] Missing-info only for short vague queries
+- [ ] Error keywords catch failure/timeout/crash cases
+- [ ] `evaluate_node` sets `needs_retry` or `success`
+- [ ] `retry_or_fallback_node` increments attempt
+- [ ] `dead_letter_node` handles max retry exhaustion
+- [ ] `approval_node` defaults approved for CI
+- [ ] `answer_node` grounds output in tool results when present
+- [ ] Implement `src/langgraph_agent_lab/routing.py`
+- [ ] Classify routes map cleanly to next node
+- [ ] Evaluate routes map to retry or answer
+- [ ] Retry routes stop at `max_attempts`
+- [ ] Approval routes continue only when approved
+- [ ] Wire `src/langgraph_agent_lab/graph.py`
+- [ ] Every path ends at `finalize -> END`
+- [ ] Run `.venv/bin/pytest`
 - [ ] Run `make run-scenarios`
+- [ ] Confirm `outputs/metrics.json` hits `100%` success
 
 ## Phase 2: Persistence
-- [ ] Implement checkpoint factory in `src/langgraph_agent_lab/persistence.py`
+- [ ] Implement `src/langgraph_agent_lab/persistence.py`
 - [ ] Support `memory` checkpointer
-- [ ] Support `sqlite` checkpointer with WAL mode
-- [ ] Confirm `thread_id` is set per run
-- [ ] Capture recovery or state-history evidence
+- [ ] Support `sqlite` checkpointer
+- [ ] Use `sqlite3.connect(..., check_same_thread=False)`
+- [ ] Enable WAL mode
+- [ ] Accept plain path and `sqlite:///...`
+- [ ] Keep `thread_id` unique per scenario
+- [ ] Prove state history survives restart with SQLite
+- [ ] Show memory loses history after restart
 
 ## Phase 3: Metrics and report
-- [ ] Generate `outputs/metrics.json` with `make run-scenarios`
-- [ ] Validate output with `make grade-local`
-- [ ] Review `src/langgraph_agent_lab/metrics.py` behavior
+- [ ] Run `make grade-local`
+- [ ] Verify metrics schema is valid
+- [ ] Check retry and interrupt counts
 - [ ] Fill `reports/lab_report.md`
-- [ ] Explain architecture and node boundaries
-- [ ] Summarize metrics and scenario coverage
-- [ ] Describe failure mode and retry behavior
-- [ ] Add improvement ideas
+- [ ] Describe architecture and state schema
+- [ ] Paste scenario table from metrics
+- [ ] Explain one failure mode and one retry path
+- [ ] Add persistence / recovery evidence
+- [ ] Add improvement plan
 
 ## Phase 4: Bonus points
-- [ ] Add at least one bonus extension
-- [ ] Try parallel fan-out with `Send()`
-- [ ] Try real HITL with interrupt/resume
-- [ ] Try crash recovery with SQLite checkpoint
-- [ ] Try time travel with state history
-- [ ] Export graph diagram if useful
-- [ ] Add evidence of bonus feature to report
+- [ ] Pick at least one bonus extension
+- [ ] Add real HITL with interrupt/resume
+- [ ] Add time travel with `get_state_history()`
+- [ ] Add parallel fan-out with `Send()`
+- [ ] Add graph diagram export
+- [ ] Add bonus evidence to report
 
 ## Final checks
 - [ ] `make test` passes
 - [ ] `make lint` passes
 - [ ] `make typecheck` passes
 - [ ] `make grade-local` passes
-- [ ] `outputs/metrics.json` is valid
-- [ ] `reports/lab_report.md` is complete
-- [ ] Can explain one route and one failure mode in demo
+- [ ] `outputs/metrics.json` valid
+- [ ] `reports/lab_report.md` complete
+- [ ] Can explain one route, one retry, one persistence demo
