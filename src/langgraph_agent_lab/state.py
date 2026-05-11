@@ -48,6 +48,8 @@ class AgentState(TypedDict, total=False):
     thread_id: str
     scenario_id: str
     query: str
+    requires_approval: bool
+    should_retry: bool
     route: str
     risk_level: str
     attempt: int
@@ -86,6 +88,8 @@ def initial_state(scenario: Scenario) -> AgentState:
         "thread_id": f"thread-{scenario.id}",
         "scenario_id": scenario.id,
         "query": scenario.query,
+        "requires_approval": scenario.requires_approval,
+        "should_retry": scenario.should_retry,
         "route": "",
         "risk_level": "unknown",
         "attempt": 0,

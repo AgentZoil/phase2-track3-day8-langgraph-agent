@@ -6,7 +6,19 @@ input state in place.
 
 from __future__ import annotations
 
+import re
+
 from .state import AgentState, ApprovalDecision, Route, make_event
+
+
+RISKY_KEYWORDS = {"refund", "delete", "send", "cancel", "remove", "revoke"}
+TOOL_KEYWORDS = {"status", "order", "lookup", "check", "track", "find", "search"}
+ERROR_KEYWORDS = {"timeout", "fail", "failure", "error", "crash", "unavailable"}
+VAGUE_PRONOUNS = {"it", "this", "that", "they", "them"}
+
+
+def _tokenize(query: str) -> list[str]:
+    return re.findall(r"\b[\w']+\b", query.lower())
 
 
 def intake_node(state: AgentState) -> dict:
@@ -28,19 +40,19 @@ def classify_node(state: AgentState) -> dict:
     TODO(student): replace keyword heuristics with a clear routing policy.
     Required routes: simple, tool, missing_info, risky, error.
     """
-    query = state.get("query", "").lower()
-    words = query.split()
-    clean_words = [w.strip("?!.,;:") for w in words]
+    query = state.get("query", "")
+    words = _tokenize(query)
+    word_set = set(words)
     route = Route.SIMPLE
     risk_level = "low"
-    if "refund" in query or "delete" in query or "send" in query:
+    if word_set & RISKY_KEYWORDS:
         route = Route.RISKY
         risk_level = "high"
-    elif "status" in query or "order" in query or "lookup" in query:
+    elif word_set & TOOL_KEYWORDS:
         route = Route.TOOL
-    elif len(clean_words) < 5 and "it" in clean_words:
+    elif len(words) < 5 and word_set & VAGUE_PRONOUNS:
         route = Route.MISSING_INFO
-    elif "timeout" in query or "fail" in query:
+    elif word_set & ERROR_KEYWORDS:
         route = Route.ERROR
     return {
         "route": route.value,
@@ -69,7 +81,12 @@ def tool_node(state: AgentState) -> dict:
     TODO(student): implement idempotent tool execution and structured tool results.
     """
     attempt = int(state.get("attempt", 0))
-    if state.get("route") == Route.ERROR.value and attempt < 2:
+    should_retry = bool(state.get("should_retry"))
+    route = state.get("route")
+    should_fail = should_retry and attempt < 1
+    if route == Route.ERROR.value and attempt < 1:
+        should_fail = True
+    if should_fail:
         result = f"ERROR: transient failure attempt={attempt} scenario={state.get('scenario_id', 'unknown')}"
     else:
         result = f"mock-tool-result for scenario={state.get('scenario_id', 'unknown')}"
